@@ -1,1 +1,516 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="Proyecto escolar integrado sobre Desarrollo Sostenible de la Universidad del Valle de México Campus Saltillo.">
+<title>Proyecto EcoSinergia | UVM Saltillo</title>
+<!-- Librería para el Gráfico -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+ 
+    <style>
 
+        /* ==========================================
+
+           1. ESTILOS GLOBALES (mi_estilo.css)
+
+           ========================================== */
+
+        :root {
+
+            --color-bg: #f8f9fa;
+
+            --color-card: #ffffff;
+
+            --color-text: #2d3748;
+
+            --color-primary: #0066cc;
+
+            --color-accent: #e2e8f0;
+
+            --font-main: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+
+        }
+ 
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+ 
+        body {
+
+            font-family: var(--font-main);
+
+            background-color: var(--color-bg);
+
+            color: var(--color-text);
+
+            line-height: 1.6;
+
+        }
+ 
+        /* Menú de Navegación */
+
+        .navbar {
+
+            background-color: var(--color-card);
+
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+
+            position: sticky;
+
+            top: 0;
+
+            z-index: 1000;
+
+        }
+ 
+        .nav-container {
+
+            max-width: 1200px;
+
+            margin: 0 auto;
+
+            display: flex;
+
+            justify-content: space-between;
+
+            align-items: center;
+
+            padding: 1rem 2rem;
+
+            position: relative;
+
+        }
+ 
+        .logo { font-weight: bold; font-size: 1.2rem; color: var(--color-primary); }
+ 
+        .nav-menu { display: flex; list-style: none; gap: 1.5rem; }
+ 
+        .nav-menu a {
+
+            text-decoration: none;
+
+            color: var(--color-text);
+
+            font-weight: 500;
+
+            cursor: pointer;
+
+            transition: color 0.3s;
+
+        }
+ 
+        .nav-menu a:hover, .nav-menu a.active { color: var(--color-primary); }
+ 
+        .menu-toggle { display: none; flex-direction: column; cursor: pointer; gap: 4px; }
+
+        .menu-toggle span { width: 25px; height: 3px; background-color: var(--color-text); }
+ 
+        /* Contenedores de Secciones simuladas */
+
+        .page-section { display: none; }
+
+        .page-section.active-page { display: block; }
+ 
+        .container { max-width: 1200px; margin: 2rem auto; padding: 0 2rem; }
+
+        h1, h2, h3 { margin-bottom: 1rem; color: #1a202c; }
+
+        .card {
+
+            background: var(--color-card);
+
+            padding: 2rem;
+
+            border-radius: 8px;
+
+            box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+
+            margin-bottom: 2rem;
+
+        }
+ 
+        /* Marquesina */
+
+        .marquee-container {
+
+            background: var(--color-primary);
+
+            color: white;
+
+            padding: 0.5rem 0;
+
+            overflow: hidden;
+
+            white-space: nowrap;
+
+        }
+ 
+        .marquee-text {
+
+            display: inline-block;
+
+            padding-left: 100%;
+
+            animation: marquee 15s linear infinite;
+
+            font-weight: bold;
+
+        }
+ 
+        @keyframes marquee {
+
+            0% { transform: translate(0, 0); }
+
+            100% { transform: translate(-100%, 0); }
+
+        }
+ 
+        /* Gráfico */
+
+        .chart-placeholder { max-width: 600px; margin: 2rem auto; }
+ 
+        /* Blog */
+
+        .blog-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 2rem; margin-top: 2rem; }
+
+        .blog-item { background: var(--color-card); border-radius: 8px; overflow: hidden; box-shadow: 0 4px 6px rgba(0,0,0,0.05); transition: transform 0.3s; }
+
+        .blog-item:hover { transform: translateY(-5px); }
+
+        .blog-img { width: 100%; height: 180px; background-color: var(--color-accent); display: flex; align-items: center; justify-content: center; color: #718096; }
+
+        .blog-content { padding: 1.5rem; }
+
+        .btn-link { display: inline-block; margin-top: 1rem; color: var(--color-primary); text-decoration: none; font-weight: bold; cursor: pointer; }
+ 
+        /* Formulario */
+
+        .form-group { margin-bottom: 1.5rem; }
+
+        .form-group label { display: block; margin-bottom: 0.5rem; font-weight: 500; }
+
+        .form-control { width: 100%; padding: 0.75rem; border: 1px solid var(--color-accent); border-radius: 4px; }
+
+        .btn-submit { background: var(--color-primary); color: white; border: none; padding: 0.75rem 1.5rem; border-radius: 4px; cursor: pointer; font-size: 1rem; }
+ 
+        /* Galería */
+
+        .gallery-container { position: relative; max-width: 600px; margin: 2rem auto; height: 350px; background: var(--color-accent); border-radius: 8px; overflow: hidden; }
+
+        .gallery-slide { width: 100%; height: 100%; display: none; align-items: center; justify-content: center; font-size: 1.2rem; font-weight: bold; color: #4a5568; }
+
+        .gallery-slide.active { display: flex; }
+
+        .gallery-btn { position: absolute; top: 50%; transform: translateY(-50%); background: rgba(0,0,0,0.5); color: white; border: none; width: 40px; height: 40px; cursor: pointer; font-size: 1.2rem; border-radius: 50%; display: flex; align-items: center; justify-content: center; }
+
+        .btn-prev { left: 10px; }
+
+        .btn-next { right: 10px; }
+ 
+        footer { text-align: center; padding: 2rem; background: var(--color-card); margin-top: 4rem; border-top: 1px solid var(--color-accent); }
+ 
+        /* Responsivo */
+
+        @media (max-width: 768px) {
+
+            .menu-toggle { display: flex; }
+
+            .nav-menu { display: none; flex-direction: column; width: 100%; position: absolute; top: 100%; left: 0; background: var(--color-card); padding: 1rem 2rem; box-shadow: 0 4px 6px rgba(0,0,0,0.1); }
+
+            .nav-menu.active { display: flex; }
+
+        }
+</style>
+</head>
+<body>
+ 
+    <!-- MENÚ SUPERIOR ADAPTABLE -->
+<nav class="navbar">
+<div class="nav-container">
+<div class="logo">UVM Saltillo</div>
+<div class="menu-toggle" id="mobile-menu">
+<span></span><span></span><span></span>
+</div>
+<ul class="nav-menu">
+<li><a onclick="navigateTo('index')" id="nav-index" class="active">Inicio</a></li>
+<li><a onclick="navigateTo('ods')" id="nav-ods">ODS</a></li>
+<li><a onclick="navigateTo('blog')" id="nav-blog">Blog</a></li>
+<li><a onclick="navigateTo('unete')" id="nav-unete">Únete</a></li>
+<li><a onclick="navigateTo('eventos')" id="nav-eventos">Eventos</a></li>
+</ul>
+</div>
+</nav>
+ 
+    <!-- MARQUESINA DINÁMICA -->
+<div class="marquee-container">
+<div class="marquee-text">¡Bienvenidos al proyecto de Desarrollo Sostenible del equipo! — UVM Campus Saltillo — Diseñando soluciones para el mañana.</div>
+</div>
+ 
+    <!-- ==========================================
+
+       2. SECCIONES DE CONTENIDO (PÁGINAS HTML)
+
+       ========================================== -->
+<main class="container">
+<!-- PÁGINA: index.html -->
+<section id="page-index" class="page-section active-page">
+<div class="card">
+<h1>Nombre del Proyecto: EcoSinergia</h1>
+<p>Este sitio web simula la navegación completa requerida para la presentación del proyecto escolar de desarrollo sostenible.</p>
+</div>
+<div class="card">
+<h2>Integrantes del Equipo</h2>
+<ul>
+<li>Estudiante 1 — Desarrollo Técnico</li>
+<li>Estudiante 2 — Diseño y Estructura</li>
+<li>Estudiante 3 — Investigación de Campo</li>
+</ul>
+<br>
+<p><strong>Institución:</strong> UVM Campus Saltillo</p>
+</div>
+</section>
+ 
+        <!-- PÁGINA: ods.html -->
+<section id="page-ods" class="page-section">
+<div class="card">
+<h1>Objetivos de Desarrollo Sostenible (ODS)</h1>
+<p>Los ODS forman parte de la Agenda 2030 de la ONU para equilibrar la sostenibilidad social, económica y ambiental.</p>
+<br>
+<h3>Objetivo Seleccionado: ODS 12 - Producción y Consumo Responsables</h3>
+<p>Nuestro equipo eligió este objetivo porque busca reducir la huella ecológica mediante un cambio drástico en los métodos de consumo de bienes y recursos dentro de nuestro campus universitario.</p>
+</div>
+<div class="card">
+<h2>Gráfico Estadístico del Proyecto</h2>
+<div class="chart-placeholder">
+<canvas id="odsChart"></canvas>
+</div>
+</div>
+</section>
+ 
+        <!-- PÁGINA: blog.html -->
+<section id="page-blog" class="page-section">
+<div class="card">
+<h1>Blog Oficial: EcoSinergia</h1>
+<p>Artículos académicos e informativos acerca de nuestro enfoque de sustentabilidad.</p>
+</div>
+<div class="blog-grid">
+<article class="blog-item">
+<div class="blog-img"><span>[Imagen: Consumo Responsable]</span></div>
+<div class="blog-content">
+<h3>Consumo Responsable en el Aula</h3>
+<p>Análisis crítico del desperdicio de materiales en entornos educativos.</p>
+<a onclick="navigateTo('articulo1')" class="btn-link">Leer artículo &rarr;</a>
+</div>
+</article>
+<article class="blog-item">
+<div class="blog-img"><span>[Imagen: Economía Circular]</span></div>
+<div class="blog-content">
+<h3>Estrategias de Economía Circular</h3>
+<p>Cómo reincorporar residuos escolares a un nuevo ciclo de utilidad.</p>
+<a onclick="navigateTo('articulo2')" class="btn-link">Leer artículo &rarr;</a>
+</div>
+</article>
+</div>
+</section>
+ 
+        <!-- PÁGINA: articulo1.html -->
+<section id="page-articulo1" class="page-section">
+<div class="card">
+<h1>Consumo Responsable en el Aula</h1>
+<p><em>Indicaciones de la Actividad 7.2 - Libro Mayahii</em></p>
+<hr style="margin: 1rem 0; border: 0; border-top: 1px solid var(--color-accent);">
+<p><strong>Introducción:</strong> Reducir el consumo innecesario requiere educación y voluntad colectiva.</p>
+<br>
+<p>En este espacio se presenta un análisis detallado sobre el desecho de plásticos de un solo uso en las cafeterías universitarias. La propuesta del equipo incluye la implementación de termos reutilizables institucionales para mitigar la generación masiva de basura diaria.</p>
+<br>
+<a onclick="navigateTo('blog')" class="btn-link">&larr; Volver al Blog</a>
+</div>
+</section>
+ 
+        <!-- PÁGINA: articulo2.html -->
+<section id="page-articulo2" class="page-section">
+<div class="card">
+<h1>Estrategias de Economía Circular</h1>
+<p><em>Indicaciones de la Actividad 7.2 - Libro Mayahii</em></p>
+<hr style="margin: 1rem 0; border: 0; border-top: 1px solid var(--color-accent);">
+<p><strong>Introducción:</strong> Pasar del modelo de usar y tirar a un ciclo continuo de reutilización.</p>
+<br>
+<p>Este artículo evalúa la viabilidad de transformar el papel recolectado en los cubículos de impresión en libretas y material didáctico para nuevas generaciones. Un enfoque circular disminuye los costos operativos del campus a la vez que cumple metas ecológicas.</p>
+<br>
+<a onclick="navigateTo('blog')" class="btn-link">&larr; Volver al Blog</a>
+</div>
+</section>
+ 
+        <!-- PÁGINA: unete.html -->
+<section id="page-unete" class="page-section">
+<div class="card">
+<h1>Inscríbete al Proyecto</h1>
+<p>Únete como voluntario y ayúdanos a cambiar las estadísticas de consumo en el campus.</p>
+<form onsubmit="event.preventDefault(); alert('¡Gracias por registrarte!');" style="margin-top: 1.5rem;">
+<div class="form-group">
+<label>Nombre Completo:</label>
+<input type="text" class="form-control" placeholder="Escribe tu nombre" required>
+</div>
+<div class="form-group">
+<label>Matrícula / Correo Institucional:</label>
+<input type="email" class="form-control" placeholder="usuario@uvm.edu.mx" required>
+</div>
+<button type="submit" class="btn-submit">Enviar Inscripción</button>
+</form>
+</div>
+</section>
+ 
+        <!-- PÁGINA: eventos.html -->
+<section id="page-eventos" class="page-section">
+<div class="card">
+<h1>Calendario de Actividades</h1>
+<ul>
+<li><strong>Junio:</strong> Campaña de concientización y recolección de PET.</li>
+<li><strong>Julio:</strong> Instalación de contenedores inteligentes de reciclaje.</li>
+</ul>
+</div>
+<div class="card">
+<h2>Galería de Fotos Interactiva</h2>
+<div class="gallery-container">
+<div class="gallery-slide active" style="background-color: #cbd5e0;"><span>[Foto 1: Planeación del Equipo en UVM]</span></div>
+<div class="gallery-slide" style="background-color: #a0aec0;"><span>[Foto 2: Recolección de Residuos]</span></div>
+<div class="gallery-slide" style="background-color: #718096;"><span>[Foto 3: Presentación de Resultados]</span></div>
+<button class="gallery-btn btn-prev" onclick="changeSlide(-1)">&lsaquo;</button>
+<button class="gallery-btn btn-next" onclick="changeSlide(1)">&rsaquo;</button>
+</div>
+</div>
+</section>
+ 
+    </main>
+ 
+    <footer>
+<p>&copy; 2026 Universidad del Valle de México — Campus Saltillo.</p>
+</footer>
+ 
+    <!-- ==========================================
+
+       3. LÓGICA DE PROGRAMACIÓN (script.js)
+
+       ========================================== -->
+<script>
+
+        // Sistema de Navegación entre Páginas Simuladas
+
+        function navigateTo(pageId) {
+
+            // Ocultar todas las secciones
+
+            document.querySelectorAll('.page-section').forEach(section => {
+
+                section.classList.remove('active-page');
+
+            });
+
+            // Quitar clase activa al menú
+
+            document.querySelectorAll('.nav-menu a').forEach(link => {
+
+                link.classList.remove('active');
+
+            });
+ 
+            // Mostrar sección seleccionada
+
+            const targetSection = document.getElementById(`page-${pageId}`);
+
+            if (targetSection) targetSection.classList.add('active-page');
+ 
+            // Marcar botón del menú como activo
+
+            const targetNavLink = document.getElementById(`nav-${pageId}`);
+
+            if (targetNavLink) targetNavLink.classList.add('active');
+ 
+            // Cerrar menú móvil al hacer clic en un enlace
+
+            document.querySelector('.nav-menu').classList.remove('active');
+ 
+            // Forzar renderizado del gráfico si entra a la sección ODS
+
+            if (pageId === 'ods') {
+
+                renderChart();
+
+            }
+
+        }
+ 
+        // Menú Desplegable Móvil
+
+        document.getElementById('mobile-menu').addEventListener('click', () => {
+
+            document.querySelector('.nav-menu').classList.toggle('active');
+
+        });
+ 
+        // Gráfico JavaScript (Chart.js)
+
+        let chartInstance = null;
+
+        function renderChart() {
+
+            const ctx = document.getElementById('odsChart');
+
+            if (!ctx) return;
+
+            if (chartInstance) chartInstance.destroy(); // Evitar duplicaciones
+
+            chartInstance = new Chart(ctx, {
+
+                type: 'bar',
+
+                data: {
+
+                    labels: ['Progreso Actual', 'Meta Intermedia', 'Meta 2030'],
+
+                    datasets: [{
+
+                        label: 'Nivel de Sustentabilidad en el Campus (%)',
+
+                        data: [25, 55, 100],
+
+                        backgroundColor: ['#cbd5e0', '#3182ce', '#0066cc']
+
+                    }]
+
+                },
+
+                options: {
+
+                    responsive: true,
+
+                    scales: { y: { beginAtZero: true, max: 100 } }
+
+                }
+
+            });
+
+        }
+ 
+        // Galería de Fotos Interactiva con botones
+
+        let currentSlide = 0;
+
+        function changeSlide(direction) {
+
+            const slides = document.querySelectorAll('.gallery-slide');
+
+            slides[currentSlide].classList.remove('active');
+
+            currentSlide += direction;
+
+            if (currentSlide >= slides.length) currentSlide = 0;
+
+            if (currentSlide < 0) currentSlide = slides.length - 1;
+
+            slides[currentSlide].classList.add('active');
+
+        }
+</script>
+</body>
+</html>
+ 
